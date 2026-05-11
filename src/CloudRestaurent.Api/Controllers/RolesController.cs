@@ -10,7 +10,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace CloudRestaurent.Api.Controllers;
 
 [ApiController]
-[Authorize(Roles = AppRoles.TenantAdmin)]
+[Authorize(Roles = $"{AppRoles.SuperAdmin},{AppRoles.TenantAdmin}")]
 [Route("api/v1/roles")]
 public sealed class RolesController(IMediator mediator) : ControllerBase
 {

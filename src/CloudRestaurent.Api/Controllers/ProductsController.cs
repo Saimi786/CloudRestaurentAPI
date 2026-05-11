@@ -30,7 +30,7 @@ public sealed class ProductsController(IMediator mediator) : ControllerBase
         Ok(await mediator.Send(new GetProductByIdQuery(id), ct));
 
     [HttpPost]
-    [Authorize(Roles = AppRoles.TenantAdmin)]
+    [Authorize(Roles = $"{AppRoles.SuperAdmin},{AppRoles.TenantAdmin}")]
     public async Task<ActionResult<ProductDto>> Create(
         [FromBody] CreateProductCommand command, CancellationToken ct)
     {
@@ -39,7 +39,7 @@ public sealed class ProductsController(IMediator mediator) : ControllerBase
     }
 
     [HttpPut("{id:guid}")]
-    [Authorize(Roles = AppRoles.TenantAdmin)]
+    [Authorize(Roles = $"{AppRoles.SuperAdmin},{AppRoles.TenantAdmin}")]
     public async Task<ActionResult<ProductDto>> Update(
         Guid id, [FromBody] UpdateProductCommand command, CancellationToken ct)
     {
@@ -52,7 +52,7 @@ public sealed class ProductsController(IMediator mediator) : ControllerBase
     }
 
     [HttpDelete("{id:guid}")]
-    [Authorize(Roles = AppRoles.TenantAdmin)]
+    [Authorize(Roles = $"{AppRoles.SuperAdmin},{AppRoles.TenantAdmin}")]
     public async Task<IActionResult> Deactivate(Guid id, CancellationToken ct)
     {
         await mediator.Send(new DeactivateProductCommand(id), ct);
@@ -67,7 +67,7 @@ public sealed class ProductsController(IMediator mediator) : ControllerBase
     public sealed record SetModifierGroupsBody(IReadOnlyList<Guid> ModifierGroupIds);
 
     [HttpPut("{id:guid}/modifier-groups")]
-    [Authorize(Roles = AppRoles.TenantAdmin)]
+    [Authorize(Roles = $"{AppRoles.SuperAdmin},{AppRoles.TenantAdmin}")]
     public async Task<IActionResult> SetModifierGroups(
         Guid id, [FromBody] SetModifierGroupsBody body, CancellationToken ct)
     {
@@ -110,7 +110,7 @@ public sealed class ProductsController(IMediator mediator) : ControllerBase
     public sealed record SetComboComponentsBody(IReadOnlyList<ComboInput> Components);
 
     [HttpPut("{id:guid}/combo-components")]
-    [Authorize(Roles = AppRoles.TenantAdmin)]
+    [Authorize(Roles = $"{AppRoles.SuperAdmin},{AppRoles.TenantAdmin}")]
     public async Task<ActionResult<IReadOnlyList<ComboComponentDto>>> SetComboComponents(
         Guid id, [FromBody] SetComboComponentsBody body, CancellationToken ct) =>
         Ok(await mediator.Send(new SetComboComponentsCommand(id, body.Components ?? []), ct));

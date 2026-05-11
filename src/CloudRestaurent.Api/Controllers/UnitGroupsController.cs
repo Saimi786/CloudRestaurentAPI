@@ -24,7 +24,7 @@ public sealed class UnitGroupsController(IMediator mediator) : ControllerBase
         Ok(await mediator.Send(new GetUnitGroupByIdQuery(id), ct));
 
     [HttpPost]
-    [Authorize(Roles = AppRoles.TenantAdmin)]
+    [Authorize(Roles = $"{AppRoles.SuperAdmin},{AppRoles.TenantAdmin}")]
     public async Task<ActionResult<UnitGroupDto>> Create(
         [FromBody] CreateUnitGroupCommand command, CancellationToken ct)
     {
@@ -33,7 +33,7 @@ public sealed class UnitGroupsController(IMediator mediator) : ControllerBase
     }
 
     [HttpPut("{id:guid}")]
-    [Authorize(Roles = AppRoles.TenantAdmin)]
+    [Authorize(Roles = $"{AppRoles.SuperAdmin},{AppRoles.TenantAdmin}")]
     public async Task<ActionResult<UnitGroupDto>> Update(
         Guid id, [FromBody] UpdateUnitGroupCommand command, CancellationToken ct)
     {
@@ -46,7 +46,7 @@ public sealed class UnitGroupsController(IMediator mediator) : ControllerBase
     }
 
     [HttpDelete("{id:guid}")]
-    [Authorize(Roles = AppRoles.TenantAdmin)]
+    [Authorize(Roles = $"{AppRoles.SuperAdmin},{AppRoles.TenantAdmin}")]
     public async Task<IActionResult> Deactivate(Guid id, CancellationToken ct)
     {
         await mediator.Send(new DeactivateUnitGroupCommand(id), ct);

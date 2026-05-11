@@ -28,7 +28,7 @@ public sealed class RecipesController(IMediator mediator) : ControllerBase
         Ok(await mediator.Send(new GetRecipeByProductIdQuery(productId), ct));
 
     [HttpPost]
-    [Authorize(Roles = AppRoles.TenantAdmin)]
+    [Authorize(Roles = $"{AppRoles.SuperAdmin},{AppRoles.TenantAdmin}")]
     public async Task<ActionResult<RecipeDto>> Create(
         [FromBody] CreateRecipeCommand command, CancellationToken ct)
     {
@@ -37,7 +37,7 @@ public sealed class RecipesController(IMediator mediator) : ControllerBase
     }
 
     [HttpPut("{id:guid}")]
-    [Authorize(Roles = AppRoles.TenantAdmin)]
+    [Authorize(Roles = $"{AppRoles.SuperAdmin},{AppRoles.TenantAdmin}")]
     public async Task<ActionResult<RecipeDto>> Update(
         Guid id, [FromBody] UpdateRecipeCommand command, CancellationToken ct)
     {
@@ -50,7 +50,7 @@ public sealed class RecipesController(IMediator mediator) : ControllerBase
     }
 
     [HttpDelete("{id:guid}")]
-    [Authorize(Roles = AppRoles.TenantAdmin)]
+    [Authorize(Roles = $"{AppRoles.SuperAdmin},{AppRoles.TenantAdmin}")]
     public async Task<IActionResult> Deactivate(Guid id, CancellationToken ct)
     {
         await mediator.Send(new DeactivateRecipeCommand(id), ct);

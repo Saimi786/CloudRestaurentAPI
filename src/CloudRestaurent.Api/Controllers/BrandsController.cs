@@ -24,7 +24,7 @@ public sealed class BrandsController(IMediator mediator) : ControllerBase
         Ok(await mediator.Send(new GetBrandByIdQuery(id), ct));
 
     [HttpPost]
-    [Authorize(Roles = AppRoles.TenantAdmin)]
+    [Authorize(Roles = $"{AppRoles.SuperAdmin},{AppRoles.TenantAdmin}")]
     public async Task<ActionResult<BrandDto>> Create(
         [FromBody] CreateBrandCommand command, CancellationToken ct)
     {
@@ -33,7 +33,7 @@ public sealed class BrandsController(IMediator mediator) : ControllerBase
     }
 
     [HttpPut("{id:guid}")]
-    [Authorize(Roles = AppRoles.TenantAdmin)]
+    [Authorize(Roles = $"{AppRoles.SuperAdmin},{AppRoles.TenantAdmin}")]
     public async Task<ActionResult<BrandDto>> Update(
         Guid id, [FromBody] UpdateBrandCommand command, CancellationToken ct)
     {
@@ -46,7 +46,7 @@ public sealed class BrandsController(IMediator mediator) : ControllerBase
     }
 
     [HttpDelete("{id:guid}")]
-    [Authorize(Roles = AppRoles.TenantAdmin)]
+    [Authorize(Roles = $"{AppRoles.SuperAdmin},{AppRoles.TenantAdmin}")]
     public async Task<IActionResult> Deactivate(Guid id, CancellationToken ct)
     {
         await mediator.Send(new DeactivateBrandCommand(id), ct);

@@ -24,7 +24,7 @@ public sealed class ModifierGroupsController(IMediator mediator) : ControllerBas
         Ok(await mediator.Send(new GetModifierGroupByIdQuery(id), ct));
 
     [HttpPost]
-    [Authorize(Roles = AppRoles.TenantAdmin)]
+    [Authorize(Roles = $"{AppRoles.SuperAdmin},{AppRoles.TenantAdmin}")]
     public async Task<ActionResult<ModifierGroupDto>> Create(
         [FromBody] CreateModifierGroupCommand command, CancellationToken ct)
     {
@@ -33,7 +33,7 @@ public sealed class ModifierGroupsController(IMediator mediator) : ControllerBas
     }
 
     [HttpPut("{id:guid}")]
-    [Authorize(Roles = AppRoles.TenantAdmin)]
+    [Authorize(Roles = $"{AppRoles.SuperAdmin},{AppRoles.TenantAdmin}")]
     public async Task<ActionResult<ModifierGroupDto>> Update(
         Guid id, [FromBody] UpdateModifierGroupCommand command, CancellationToken ct)
     {
@@ -46,7 +46,7 @@ public sealed class ModifierGroupsController(IMediator mediator) : ControllerBas
     }
 
     [HttpDelete("{id:guid}")]
-    [Authorize(Roles = AppRoles.TenantAdmin)]
+    [Authorize(Roles = $"{AppRoles.SuperAdmin},{AppRoles.TenantAdmin}")]
     public async Task<IActionResult> Deactivate(Guid id, CancellationToken ct)
     {
         await mediator.Send(new DeactivateModifierGroupCommand(id), ct);

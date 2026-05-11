@@ -72,6 +72,16 @@ public sealed class PlatformController(IMediator mediator) : ControllerBase
         Ok(await mediator.Send(new GetTenantBranchesQuery(id), ct));
 
     /// <summary>
+    /// Flat list of every active branch across every tenant — used by the
+    /// top-bar location picker for SuperAdmin to switch operating context.
+    /// </summary>
+    [HttpGet("branches")]
+    [HasPermission(AppPermissions.PlatformManageTenants)]
+    public async Task<ActionResult<IReadOnlyList<PlatformBranchPickDto>>> ListAllBranches(
+        CancellationToken ct) =>
+        Ok(await mediator.Send(new GetAllPlatformBranchesQuery(), ct));
+
+    /// <summary>
     /// Full branch + parent tenant + owner info — used by the SuperAdmin
     /// "Manage Location" page.
     /// </summary>

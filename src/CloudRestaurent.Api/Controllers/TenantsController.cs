@@ -25,7 +25,7 @@ public sealed class TenantsController(IMediator mediator) : ControllerBase
     /// so the public URL is stable across re-uploads.
     /// </summary>
     [HttpPost("me/logo")]
-    [Authorize(Roles = AppRoles.TenantAdmin)]
+    [Authorize(Roles = $"{AppRoles.SuperAdmin},{AppRoles.TenantAdmin}")]
     [RequestSizeLimit(2_000_000)] // 2 MB cap; logos should be tiny
     public async Task<ActionResult<TenantDto>> UploadLogo(
         IFormFile file,

@@ -20,7 +20,7 @@ public sealed class SettingsController(IMediator mediator) : ControllerBase
         Ok(await mediator.Send(new GetBusinessSettingsQuery(), ct));
 
     [HttpPut("business")]
-    [Authorize(Roles = AppRoles.TenantAdmin)]
+    [Authorize(Roles = $"{AppRoles.SuperAdmin},{AppRoles.TenantAdmin}")]
     public async Task<ActionResult<BusinessSettingsDto>> Update(
         [FromBody] UpdateBusinessSettingsCommand command, CancellationToken ct) =>
         Ok(await mediator.Send(command, ct));

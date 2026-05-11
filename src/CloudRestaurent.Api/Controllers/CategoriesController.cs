@@ -24,7 +24,7 @@ public sealed class CategoriesController(IMediator mediator) : ControllerBase
         Ok(await mediator.Send(new GetCategoryByIdQuery(id), ct));
 
     [HttpPost]
-    [Authorize(Roles = AppRoles.TenantAdmin)]
+    [Authorize(Roles = $"{AppRoles.SuperAdmin},{AppRoles.TenantAdmin}")]
     public async Task<ActionResult<CategoryDto>> Create(
         [FromBody] CreateCategoryCommand command, CancellationToken ct)
     {
@@ -33,7 +33,7 @@ public sealed class CategoriesController(IMediator mediator) : ControllerBase
     }
 
     [HttpPut("{id:guid}")]
-    [Authorize(Roles = AppRoles.TenantAdmin)]
+    [Authorize(Roles = $"{AppRoles.SuperAdmin},{AppRoles.TenantAdmin}")]
     public async Task<ActionResult<CategoryDto>> Update(
         Guid id, [FromBody] UpdateCategoryCommand command, CancellationToken ct)
     {
@@ -46,7 +46,7 @@ public sealed class CategoriesController(IMediator mediator) : ControllerBase
     }
 
     [HttpDelete("{id:guid}")]
-    [Authorize(Roles = AppRoles.TenantAdmin)]
+    [Authorize(Roles = $"{AppRoles.SuperAdmin},{AppRoles.TenantAdmin}")]
     public async Task<IActionResult> Deactivate(Guid id, CancellationToken ct)
     {
         await mediator.Send(new DeactivateCategoryCommand(id), ct);

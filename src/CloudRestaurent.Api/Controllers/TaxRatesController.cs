@@ -24,7 +24,7 @@ public sealed class TaxRatesController(IMediator mediator) : ControllerBase
         Ok(await mediator.Send(new GetTaxRateByIdQuery(id), ct));
 
     [HttpPost]
-    [Authorize(Roles = AppRoles.TenantAdmin)]
+    [Authorize(Roles = $"{AppRoles.SuperAdmin},{AppRoles.TenantAdmin}")]
     public async Task<ActionResult<TaxRateDto>> Create(
         [FromBody] CreateTaxRateCommand command, CancellationToken ct)
     {
@@ -33,7 +33,7 @@ public sealed class TaxRatesController(IMediator mediator) : ControllerBase
     }
 
     [HttpPut("{id:guid}")]
-    [Authorize(Roles = AppRoles.TenantAdmin)]
+    [Authorize(Roles = $"{AppRoles.SuperAdmin},{AppRoles.TenantAdmin}")]
     public async Task<ActionResult<TaxRateDto>> Update(
         Guid id, [FromBody] UpdateTaxRateCommand command, CancellationToken ct)
     {
@@ -46,7 +46,7 @@ public sealed class TaxRatesController(IMediator mediator) : ControllerBase
     }
 
     [HttpDelete("{id:guid}")]
-    [Authorize(Roles = AppRoles.TenantAdmin)]
+    [Authorize(Roles = $"{AppRoles.SuperAdmin},{AppRoles.TenantAdmin}")]
     public async Task<IActionResult> Deactivate(Guid id, CancellationToken ct)
     {
         await mediator.Send(new DeactivateTaxRateCommand(id), ct);

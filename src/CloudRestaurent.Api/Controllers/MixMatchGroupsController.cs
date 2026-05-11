@@ -24,7 +24,7 @@ public sealed class MixMatchGroupsController(IMediator mediator) : ControllerBas
         Ok(await mediator.Send(new GetMixMatchGroupByIdQuery(id), ct));
 
     [HttpPost]
-    [Authorize(Roles = AppRoles.TenantAdmin)]
+    [Authorize(Roles = $"{AppRoles.SuperAdmin},{AppRoles.TenantAdmin}")]
     public async Task<ActionResult<MixMatchGroupDetailDto>> Create(
         [FromBody] CreateMixMatchGroupCommand command, CancellationToken ct)
     {
@@ -33,7 +33,7 @@ public sealed class MixMatchGroupsController(IMediator mediator) : ControllerBas
     }
 
     [HttpPut("{id:guid}")]
-    [Authorize(Roles = AppRoles.TenantAdmin)]
+    [Authorize(Roles = $"{AppRoles.SuperAdmin},{AppRoles.TenantAdmin}")]
     public async Task<ActionResult<MixMatchGroupDetailDto>> Update(
         Guid id, [FromBody] UpdateMixMatchGroupCommand command, CancellationToken ct)
     {
@@ -46,7 +46,7 @@ public sealed class MixMatchGroupsController(IMediator mediator) : ControllerBas
     }
 
     [HttpDelete("{id:guid}")]
-    [Authorize(Roles = AppRoles.TenantAdmin)]
+    [Authorize(Roles = $"{AppRoles.SuperAdmin},{AppRoles.TenantAdmin}")]
     public async Task<IActionResult> Deactivate(Guid id, CancellationToken ct)
     {
         await mediator.Send(new DeactivateMixMatchGroupCommand(id), ct);

@@ -17,7 +17,7 @@ namespace CloudRestaurent.Api.Controllers;
 /// users iterate by re-uploading a corrected file.
 /// </summary>
 [ApiController]
-[Authorize(Roles = AppRoles.TenantAdmin)]
+[Authorize(Roles = $"{AppRoles.SuperAdmin},{AppRoles.TenantAdmin}")]
 [Route("api/v1/imports")]
 public sealed class ImportsController(IMediator mediator) : ControllerBase
 {

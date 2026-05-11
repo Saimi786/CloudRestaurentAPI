@@ -21,13 +21,13 @@ public sealed class CashRegistersController(IMediator mediator) : ControllerBase
         Ok(await mediator.Send(new GetCashRegistersQuery(branchId, includeInactive), ct));
 
     [HttpPost]
-    [Authorize(Roles = AppRoles.TenantAdmin)]
+    [Authorize(Roles = $"{AppRoles.SuperAdmin},{AppRoles.TenantAdmin}")]
     public async Task<ActionResult<CashRegisterDto>> Create(
         [FromBody] CreateCashRegisterCommand command, CancellationToken ct) =>
         Ok(await mediator.Send(command, ct));
 
     [HttpPut("{id:guid}")]
-    [Authorize(Roles = AppRoles.TenantAdmin)]
+    [Authorize(Roles = $"{AppRoles.SuperAdmin},{AppRoles.TenantAdmin}")]
     public async Task<IActionResult> Update(Guid id,
         [FromBody] UpdateCashRegisterCommand command, CancellationToken ct)
     {
@@ -38,7 +38,7 @@ public sealed class CashRegistersController(IMediator mediator) : ControllerBase
     }
 
     [HttpDelete("{id:guid}")]
-    [Authorize(Roles = AppRoles.TenantAdmin)]
+    [Authorize(Roles = $"{AppRoles.SuperAdmin},{AppRoles.TenantAdmin}")]
     public async Task<IActionResult> Deactivate(Guid id, CancellationToken ct)
     {
         await mediator.Send(new DeactivateCashRegisterCommand(id), ct);

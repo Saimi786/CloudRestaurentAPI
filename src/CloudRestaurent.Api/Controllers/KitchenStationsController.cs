@@ -28,7 +28,7 @@ public sealed class KitchenStationsController(IMediator mediator) : ControllerBa
         Ok(await mediator.Send(new GetKitchenStationByIdQuery(id), ct));
 
     [HttpPost]
-    [Authorize(Roles = AppRoles.TenantAdmin)]
+    [Authorize(Roles = $"{AppRoles.SuperAdmin},{AppRoles.TenantAdmin}")]
     public async Task<ActionResult<KitchenStationDto>> Create(
         [FromBody] CreateKitchenStationCommand command, CancellationToken ct)
     {
@@ -37,7 +37,7 @@ public sealed class KitchenStationsController(IMediator mediator) : ControllerBa
     }
 
     [HttpPut("{id:guid}")]
-    [Authorize(Roles = AppRoles.TenantAdmin)]
+    [Authorize(Roles = $"{AppRoles.SuperAdmin},{AppRoles.TenantAdmin}")]
     public async Task<ActionResult<KitchenStationDto>> Update(
         Guid id, [FromBody] UpdateKitchenStationCommand command, CancellationToken ct)
     {
@@ -50,7 +50,7 @@ public sealed class KitchenStationsController(IMediator mediator) : ControllerBa
     }
 
     [HttpDelete("{id:guid}")]
-    [Authorize(Roles = AppRoles.TenantAdmin)]
+    [Authorize(Roles = $"{AppRoles.SuperAdmin},{AppRoles.TenantAdmin}")]
     public async Task<IActionResult> Deactivate(Guid id, CancellationToken ct)
     {
         await mediator.Send(new DeactivateKitchenStationCommand(id), ct);
