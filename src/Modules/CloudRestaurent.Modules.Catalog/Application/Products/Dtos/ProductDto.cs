@@ -1,0 +1,28 @@
+namespace CloudRestaurent.Modules.Catalog.Application.Products.Dtos;
+
+public sealed record ProductDto(
+    Guid Id,
+    Guid CategoryId,
+    Guid UnitId,
+    Guid? BrandId,
+    Guid? TaxRateId,
+    string Sku,
+    string Name,
+    string? Description,
+    string? Barcode,
+    decimal BasePriceAmount,
+    string BasePriceCurrency,
+    decimal? CostPriceAmount,
+    string? CostPriceCurrency,
+    int Type,
+    string TypeName,
+    string? ImageUrl,
+    string? HsnCode,
+    decimal? ReorderPoint,
+    decimal? Weight,
+    bool IsTaxable,
+    bool IsSold,
+    bool IsPurchased,
+    bool IsActive,
+    bool IsAvailable,
+    bool IsStockTracked);

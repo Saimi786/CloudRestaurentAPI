@@ -1,0 +1,40 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <ItemGroup>
+    <ProjectReference Include="..\CloudRestaurent.Application\CloudRestaurent.Application.csproj" />
+    <ProjectReference Include="..\..\Modules\CloudRestaurent.Modules.Accounting\CloudRestaurent.Modules.Accounting.csproj" />
+    <ProjectReference Include="..\..\Modules\CloudRestaurent.Modules.Catalog\CloudRestaurent.Modules.Catalog.csproj" />
+    <ProjectReference Include="..\..\Modules\CloudRestaurent.Modules.Contacts\CloudRestaurent.Modules.Contacts.csproj" />
+    <ProjectReference Include="..\..\Modules\CloudRestaurent.Modules.Inventory\CloudRestaurent.Modules.Inventory.csproj" />
+    <ProjectReference Include="..\..\Modules\CloudRestaurent.Modules.Pricing\CloudRestaurent.Modules.Pricing.csproj" />
+    <ProjectReference Include="..\..\Modules\CloudRestaurent.Modules.Restaurant\CloudRestaurent.Modules.Restaurant.csproj" />
+    <ProjectReference Include="..\..\Modules\CloudRestaurent.Modules.SaaS\CloudRestaurent.Modules.SaaS.csproj" />
+    <ProjectReference Include="..\..\Modules\CloudRestaurent.Modules.Sales\CloudRestaurent.Modules.Sales.csproj" />
+    <ProjectReference Include="..\..\Modules\CloudRestaurent.Modules.Tax\CloudRestaurent.Modules.Tax.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.Authorization" Version="10.0.7" />
+    <PackageReference Include="Microsoft.AspNetCore.Identity" Version="2.3.9" />
+    <PackageReference Include="Microsoft.Extensions.Caching.Memory" Version="10.0.7" />
+    <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="10.0.7" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="10.0.7" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="10.0.7">
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+      <PrivateAssets>all</PrivateAssets>
+    </PackageReference>
+    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="10.0.7" />
+    <PackageReference Include="Microsoft.Extensions.Configuration.Abstractions" Version="10.0.7" />
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="10.0.7" />
+    <PackageReference Include="Microsoft.IdentityModel.Tokens" Version="8.18.0" />
+    <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="8.18.0" />
+    <PackageReference Include="System.Security.Cryptography.Xml" Version="10.0.7" />
+  </ItemGroup>
+
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+</Project>

@@ -1,0 +1,13 @@
+{
+  "Tenancy": true,
+  "Identity": true,
+  "Catalog": true,
+  "Pricing": true,
+  "Inventory": true,
+  "Contacts": true,
+  "Sales": true,
+  "Restaurant": true,
+  "Tax": true,
+  "Accounting": true,
+  "SaaS": true
+}

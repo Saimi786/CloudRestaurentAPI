@@ -1,0 +1,16 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <RootNamespace>CloudRestaurent.Modules.Accounting</RootNamespace>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\Core\CloudRestaurent.Application\CloudRestaurent.Application.csproj" />
+    <ProjectReference Include="..\CloudRestaurent.Modules.Sales\CloudRestaurent.Modules.Sales.csproj" />
+    <ProjectReference Include="..\CloudRestaurent.Modules.Inventory\CloudRestaurent.Modules.Inventory.csproj" />
+  </ItemGroup>
+
+</Project>

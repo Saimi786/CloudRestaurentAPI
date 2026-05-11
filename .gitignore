@@ -1,0 +1,34 @@
+# Build outputs
+**/bin/
+**/obj/
+**/out/
+
+# IDE / editor
+.vs/
+.vscode/
+.idea/
+*.user
+*.suo
+
+# Test results / coverage
+TestResults/
+coverage*.xml
+*.trx
+
+# Local dev / secrets
+appsettings.Local.json
+appsettings.*.Local.json
+*.pfx
+*.snk
+secrets.json
+
+# Logs
+*.log
+logs/
+
+# Uploaded files at runtime
+src/CloudRestaurent.Api/wwwroot/uploads/
+
+# OS
+.DS_Store
+Thumbs.db

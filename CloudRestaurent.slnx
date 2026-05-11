@@ -1,0 +1,27 @@
+<Solution>
+  <Folder Name="/src/">
+    <Project Path="src/CloudRestaurent.Api/CloudRestaurent.Api.csproj" />
+  </Folder>
+  <Folder Name="/src/Core/">
+    <Project Path="src/Core/CloudRestaurent.Application/CloudRestaurent.Application.csproj" />
+    <Project Path="src/Core/CloudRestaurent.Domain/CloudRestaurent.Domain.csproj" />
+    <Project Path="src/Core/CloudRestaurent.Infrastructure/CloudRestaurent.Infrastructure.csproj" />
+  </Folder>
+  <Folder Name="/src/Modules/">
+    <Project Path="src/Modules/CloudRestaurent.Modules.Catalog/CloudRestaurent.Modules.Catalog.csproj" />
+    <Project Path="src/Modules/CloudRestaurent.Modules.Contacts/CloudRestaurent.Modules.Contacts.csproj" />
+    <Project Path="src/Modules/CloudRestaurent.Modules.Identity/CloudRestaurent.Modules.Identity.csproj" />
+    <Project Path="src/Modules/CloudRestaurent.Modules.Inventory/CloudRestaurent.Modules.Inventory.csproj" />
+    <Project Path="src/Modules/CloudRestaurent.Modules.Pricing/CloudRestaurent.Modules.Pricing.csproj" />
+    <Project Path="src/Modules/CloudRestaurent.Modules.Restaurant/CloudRestaurent.Modules.Restaurant.csproj" />
+    <Project Path="src/Modules/CloudRestaurent.Modules.SaaS/CloudRestaurent.Modules.SaaS.csproj" />
+    <Project Path="src/Modules/CloudRestaurent.Modules.Sales/CloudRestaurent.Modules.Sales.csproj" />
+    <Project Path="src/Modules/CloudRestaurent.Modules.Tax/CloudRestaurent.Modules.Tax.csproj" />
+    <Project Path="src/Modules/CloudRestaurent.Modules.Tenancy/CloudRestaurent.Modules.Tenancy.csproj" />
+  </Folder>
+  <Folder Name="/tests/">
+    <Project Path="tests/CloudRestaurent.Api.IntegrationTests/CloudRestaurent.Api.IntegrationTests.csproj" />
+    <Project Path="tests/CloudRestaurent.Application.UnitTests/CloudRestaurent.Application.UnitTests.csproj" />
+    <Project Path="tests/CloudRestaurent.Domain.UnitTests/CloudRestaurent.Domain.UnitTests.csproj" />
+  </Folder>
+</Solution>
