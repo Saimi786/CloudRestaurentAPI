@@ -39,10 +39,14 @@ public sealed class UpdateBranchHandler(IAppDbContext db)
 {
     public async Task<BranchDto> Handle(UpdateBranchCommand request, CancellationToken ct)
     {
-        var branch = await db.Set<Branch>().FirstOrDefaultAsync(b => b.Id == request.Id, ct)
+        // SuperAdmin is allowed to edit any tenant's branch, so bypass the per-tenant
+        // global filter for the lookup; the controller has already gated this on the
+        // SuperAdmin role so cross-tenant editing here is intentional.
+        var branch = await db.Set<Branch>().IgnoreQueryFilters()
+            .FirstOrDefaultAsync(b => b.Id == request.Id, ct)
             ?? throw new NotFoundException("Branch", request.Id);
 
-        var codeTaken = await db.Set<Branch>().AnyAsync(b =>
+        var codeTaken = await db.Set<Branch>().IgnoreQueryFilters().AnyAsync(b =>
             b.Id != request.Id &&
             b.CompanyId == branch.CompanyId &&
             b.Code == request.Code, ct);

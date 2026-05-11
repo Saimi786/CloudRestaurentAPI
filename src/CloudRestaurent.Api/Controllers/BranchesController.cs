@@ -26,7 +26,7 @@ public sealed class BranchesController(IMediator mediator) : ControllerBase
         Ok(await mediator.Send(new GetBranchByIdQuery(id), ct));
 
     [HttpPost]
-    [Authorize(Roles = AppRoles.TenantAdmin)]
+    [Authorize(Roles = AppRoles.SuperAdmin)]
     public async Task<ActionResult<BranchDto>> Create(
         [FromBody] CreateBranchCommand command,
         CancellationToken ct)
@@ -36,7 +36,7 @@ public sealed class BranchesController(IMediator mediator) : ControllerBase
     }
 
     [HttpPut("{id:guid}")]
-    [Authorize(Roles = AppRoles.TenantAdmin)]
+    [Authorize(Roles = AppRoles.SuperAdmin)]
     public async Task<ActionResult<BranchDto>> Update(
         Guid id,
         [FromBody] UpdateBranchCommand command,
@@ -51,7 +51,7 @@ public sealed class BranchesController(IMediator mediator) : ControllerBase
     }
 
     [HttpDelete("{id:guid}")]
-    [Authorize(Roles = AppRoles.TenantAdmin)]
+    [Authorize(Roles = AppRoles.SuperAdmin)]
     public async Task<IActionResult> Deactivate(Guid id, CancellationToken ct)
     {
         await mediator.Send(new DeactivateBranchCommand(id), ct);

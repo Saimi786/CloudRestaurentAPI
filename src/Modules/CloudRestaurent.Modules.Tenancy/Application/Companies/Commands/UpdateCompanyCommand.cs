@@ -32,13 +32,18 @@ public sealed class UpdateCompanyHandler(IAppDbContext db)
 {
     public async Task<CompanyDto> Handle(UpdateCompanyCommand request, CancellationToken ct)
     {
-        var company = await db.Set<Company>().FirstOrDefaultAsync(c => c.Id == request.Id, ct)
+        // SuperAdmin-only endpoint; cross-tenant edits are intentional, so bypass the
+        // per-tenant query filter. Uniqueness check is scoped to the company's tenant.
+        var company = await db.Set<Company>().IgnoreQueryFilters()
+            .FirstOrDefaultAsync(c => c.Id == request.Id, ct)
             ?? throw new NotFoundException("Company", request.Id);
 
-        var nameTaken = await db.Set<Company>()
-            .AnyAsync(c => c.Id != request.Id && c.Name == request.Name, ct);
+        var nameTaken = await db.Set<Company>().IgnoreQueryFilters()
+            .AnyAsync(c => c.Id != request.Id
+                && c.TenantId == company.TenantId
+                && c.Name == request.Name, ct);
         if (nameTaken)
-            throw new ConflictException($"A company named '{request.Name}' already exists.");
+            throw new ConflictException($"A company named '{request.Name}' already exists in this tenant.");
 
         company.Update(request.Name, request.LegalName, request.DefaultCurrency, request.TaxRegistrationNumber);
         await db.SaveChangesAsync(ct);

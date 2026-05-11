@@ -8,12 +8,18 @@ using Microsoft.EntityFrameworkCore;
 
 namespace CloudRestaurent.Modules.Tenancy.Application.Branches.Commands;
 
+/// <summary>
+/// Create a Branch. SuperAdmin only (see BranchesController authorization).
+/// Optional <paramref name="TenantId"/> lets a SuperAdmin create a branch in any tenant
+/// — when omitted, defaults to the caller's tenant context (their JWT 'tid' claim).
+/// </summary>
 public sealed record CreateBranchCommand(
     Guid CompanyId,
     string Name,
     string Code,
     string? PhoneNumber,
-    LocationDto Location) : IRequest<BranchDto>;
+    LocationDto Location,
+    Guid? TenantId = null) : IRequest<BranchDto>;
 
 public sealed class CreateBranchValidator : AbstractValidator<CreateBranchCommand>
 {
@@ -35,15 +41,24 @@ public sealed class CreateBranchHandler(IAppDbContext db, ITenantContext tenantC
 {
     public async Task<BranchDto> Handle(CreateBranchCommand request, CancellationToken ct)
     {
-        var tenantId = tenantContext.TenantId
+        var tenantId = request.TenantId
+            ?? tenantContext.TenantId
             ?? throw new UnauthorizedException("No tenant in current context.");
 
-        var companyExists = await db.Set<Company>()
-            .AnyAsync(c => c.Id == request.CompanyId, ct);
-        if (!companyExists)
+        // IgnoreQueryFilters so SuperAdmin can validate against a tenant they don't
+        // currently belong to. Verify the company belongs to the target tenant —
+        // otherwise the caller could attach a branch to another tenant's company.
+        var companyTenantId = await db.Set<Company>().IgnoreQueryFilters()
+            .Where(c => c.Id == request.CompanyId)
+            .Select(c => (Guid?)c.TenantId)
+            .FirstOrDefaultAsync(ct);
+        if (companyTenantId is null)
             throw new NotFoundException("Company", request.CompanyId);
+        if (companyTenantId != tenantId)
+            throw new BusinessRuleException(
+                "Company does not belong to the target tenant.");
 
-        var codeTaken = await db.Set<Branch>()
+        var codeTaken = await db.Set<Branch>().IgnoreQueryFilters()
             .AnyAsync(b => b.CompanyId == request.CompanyId && b.Code == request.Code, ct);
         if (codeTaken)
             throw new ConflictException(

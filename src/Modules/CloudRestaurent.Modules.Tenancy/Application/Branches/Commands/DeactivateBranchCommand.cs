@@ -13,7 +13,9 @@ public sealed class DeactivateBranchHandler(IAppDbContext db)
 {
     public async Task Handle(DeactivateBranchCommand request, CancellationToken ct)
     {
-        var branch = await db.Set<Branch>().FirstOrDefaultAsync(b => b.Id == request.Id, ct)
+        // SuperAdmin-only endpoint; cross-tenant deactivation is intentional.
+        var branch = await db.Set<Branch>().IgnoreQueryFilters()
+            .FirstOrDefaultAsync(b => b.Id == request.Id, ct)
             ?? throw new NotFoundException("Branch", request.Id);
 
         if (!branch.IsActive) return;

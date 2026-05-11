@@ -13,7 +13,9 @@ public sealed class DeactivateCompanyHandler(IAppDbContext db)
 {
     public async Task Handle(DeactivateCompanyCommand request, CancellationToken ct)
     {
-        var company = await db.Set<Company>().FirstOrDefaultAsync(c => c.Id == request.Id, ct)
+        // SuperAdmin-only endpoint; cross-tenant deactivation is intentional.
+        var company = await db.Set<Company>().IgnoreQueryFilters()
+            .FirstOrDefaultAsync(c => c.Id == request.Id, ct)
             ?? throw new NotFoundException("Company", request.Id);
 
         if (!company.IsActive) return;

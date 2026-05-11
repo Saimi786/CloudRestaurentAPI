@@ -25,7 +25,7 @@ public sealed class CompaniesController(IMediator mediator) : ControllerBase
         Ok(await mediator.Send(new GetCompanyByIdQuery(id), ct));
 
     [HttpPost]
-    [Authorize(Roles = AppRoles.TenantAdmin)]
+    [Authorize(Roles = AppRoles.SuperAdmin)]
     public async Task<ActionResult<CompanyDto>> Create(
         [FromBody] CreateCompanyCommand command,
         CancellationToken ct)
@@ -35,7 +35,7 @@ public sealed class CompaniesController(IMediator mediator) : ControllerBase
     }
 
     [HttpPut("{id:guid}")]
-    [Authorize(Roles = AppRoles.TenantAdmin)]
+    [Authorize(Roles = AppRoles.SuperAdmin)]
     public async Task<ActionResult<CompanyDto>> Update(
         Guid id,
         [FromBody] UpdateCompanyCommand command,
@@ -50,7 +50,7 @@ public sealed class CompaniesController(IMediator mediator) : ControllerBase
     }
 
     [HttpDelete("{id:guid}")]
-    [Authorize(Roles = AppRoles.TenantAdmin)]
+    [Authorize(Roles = AppRoles.SuperAdmin)]
     public async Task<IActionResult> Deactivate(Guid id, CancellationToken ct)
     {
         await mediator.Send(new DeactivateCompanyCommand(id), ct);
