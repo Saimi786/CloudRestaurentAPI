@@ -15,7 +15,8 @@ public sealed record UpdateBranchCommand(
     string? PhoneNumber,
     LocationDto Location,
     int? ReceiptTemplate = null,
-    string? ReceiptFooterText = null) : IRequest<BranchDto>;
+    string? ReceiptFooterText = null,
+    bool? IsActive = null) : IRequest<BranchDto>;
 
 public sealed class UpdateBranchValidator : AbstractValidator<UpdateBranchCommand>
 {
@@ -65,6 +66,14 @@ public sealed class UpdateBranchHandler(IAppDbContext db)
             branch.SetReceiptOptions(
                 (ReceiptTemplate)(request.ReceiptTemplate ?? (int)branch.ReceiptTemplate),
                 request.ReceiptFooterText ?? branch.ReceiptFooterText);
+
+        // Status toggle from the edit form. Skipping the DELETE-then-edit dance —
+        // a single Save commits the activation change alongside everything else.
+        if (request.IsActive is { } desired && desired != branch.IsActive)
+        {
+            if (desired) branch.Activate(); else branch.Deactivate();
+        }
+
         await db.SaveChangesAsync(ct);
 
         return new BranchDto(
