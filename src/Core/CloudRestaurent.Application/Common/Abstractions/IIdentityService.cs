@@ -13,6 +13,19 @@ public interface IIdentityService
 
     Task SetBranchAssignmentsAsync(Guid userId, Guid tenantId, IReadOnlyList<Guid> branchIds, CancellationToken ct);
 
+    /// <summary>
+    /// SuperAdmin-only: list users assigned to a specific branch, regardless of which
+    /// tenant they belong to. Used by the Manage Location page.
+    /// </summary>
+    Task<IReadOnlyList<UserSummary>> ListUsersByBranchAsync(Guid branchId, CancellationToken ct);
+
+    /// <summary>
+    /// SuperAdmin-only: reset any user's password regardless of which tenant they belong
+    /// to. Used by the Manage Location page so the platform operator can rescue locked-out
+    /// franchise admins without impersonation.
+    /// </summary>
+    Task ResetPasswordCrossTenantAsync(Guid userId, string newPassword, CancellationToken ct);
+
     IReadOnlyList<string> GetAssignableRoles();
 }
 

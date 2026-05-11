@@ -183,6 +183,49 @@ public sealed class IdentityService(UserManager<AppUser> userManager, AppDbConte
         await db.SaveChangesAsync(ct);
     }
 
+    public async Task<IReadOnlyList<UserSummary>> ListUsersByBranchAsync(
+        Guid branchId, CancellationToken ct)
+    {
+        // Cross-tenant: SuperAdmin needs to see every user assigned to this branch
+        // regardless of which tenant they belong to. UserBranches isn't ITenantScoped
+        // for the purposes of this query — we filter by BranchId directly.
+        var userIds = await db.UserBranches.AsNoTracking()
+            .Where(ub => ub.BranchId == branchId)
+            .Select(ub => ub.UserId)
+            .ToListAsync(ct);
+
+        if (userIds.Count == 0) return Array.Empty<UserSummary>();
+
+        var users = await userManager.Users.AsNoTracking()
+            .Where(u => userIds.Contains(u.Id))
+            .OrderBy(u => u.Email)
+            .ToListAsync(ct);
+
+        // Same single-query-per-user trade-off as ListUsersAsync; ASP.NET Identity
+        // doesn't expose a bulk role-fetch API.
+        var summaries = new List<UserSummary>(users.Count);
+        foreach (var u in users)
+        {
+            var roles = await userManager.GetRolesAsync(u);
+            var branchIds = await db.UserBranches.AsNoTracking()
+                .Where(ub => ub.UserId == u.Id)
+                .Select(ub => ub.BranchId)
+                .ToListAsync(ct);
+            summaries.Add(ToSummary(u, roles, branchIds));
+        }
+        return summaries;
+    }
+
+    public async Task ResetPasswordCrossTenantAsync(Guid userId, string newPassword, CancellationToken ct)
+    {
+        var user = await userManager.Users.FirstOrDefaultAsync(u => u.Id == userId, ct)
+            ?? throw new IdentityOperationException("User not found.");
+
+        var token = await userManager.GeneratePasswordResetTokenAsync(user);
+        var result = await userManager.ResetPasswordAsync(user, token, newPassword);
+        if (!result.Succeeded) throw FromIdentityResult(result);
+    }
+
     public IReadOnlyList<string> GetAssignableRoles() =>
         AppRoles.All.Where(r => r != AppRoles.SuperAdmin).ToArray();
 

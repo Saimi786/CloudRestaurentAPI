@@ -61,6 +61,54 @@ public sealed class PlatformController(IMediator mediator) : ControllerBase
         return NoContent();
     }
 
+    /// <summary>
+    /// All branches under a tenant — used by the SuperAdmin "Manage Business" page
+    /// to drill into a business's locations.
+    /// </summary>
+    [HttpGet("tenants/{id:guid}/branches")]
+    [HasPermission(AppPermissions.PlatformManageTenants)]
+    public async Task<ActionResult<IReadOnlyList<PlatformBranchDto>>> ListTenantBranches(
+        Guid id, CancellationToken ct) =>
+        Ok(await mediator.Send(new GetTenantBranchesQuery(id), ct));
+
+    /// <summary>
+    /// Full branch + parent tenant + owner info — used by the SuperAdmin
+    /// "Manage Location" page.
+    /// </summary>
+    [HttpGet("branches/{id:guid}")]
+    [HasPermission(AppPermissions.PlatformManageTenants)]
+    public async Task<ActionResult<PlatformBranchDetailDto>> GetBranchDetail(
+        Guid id, CancellationToken ct) =>
+        Ok(await mediator.Send(new GetPlatformBranchQuery(id), ct));
+
+    /// <summary>Users assigned to a specific branch (cross-tenant for SuperAdmin).</summary>
+    [HttpGet("branches/{id:guid}/users")]
+    [HasPermission(AppPermissions.PlatformManageTenants)]
+    public async Task<ActionResult<IReadOnlyList<UserSummary>>> ListBranchUsers(
+        Guid id,
+        [FromServices] IIdentityService identity,
+        CancellationToken ct) =>
+        Ok(await identity.ListUsersByBranchAsync(id, ct));
+
+    public sealed record ResetUserPasswordBody(string NewPassword);
+
+    /// <summary>
+    /// SuperAdmin-only cross-tenant password reset. The normal /users/{id}/reset-password
+    /// is tenant-scoped via the caller's JWT — this one bypasses that so the platform
+    /// operator can rescue a locked-out admin in any tenant.
+    /// </summary>
+    [HttpPost("users/{id:guid}/reset-password")]
+    [HasPermission(AppPermissions.PlatformManageTenants)]
+    public async Task<IActionResult> ResetUserPassword(
+        Guid id,
+        [FromBody] ResetUserPasswordBody body,
+        [FromServices] IIdentityService identity,
+        CancellationToken ct)
+    {
+        await identity.ResetPasswordCrossTenantAsync(id, body.NewPassword, ct);
+        return NoContent();
+    }
+
     // ============== Packages ==============
 
     [HttpGet("packages")]
